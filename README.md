@@ -1,3 +1,9 @@
+# cdceprog actualizado
+
+Este fork esta orientado para actualizar el codigo original de [ikorb y su cdceprog](https://github.com/ikorb/cdceprog).
+Tambien se añadira un tutorial de uso en español.
+
+# Repo Original
 # cdceprog #
 
 This is a very quick hack for programming a TI CDCE913/925 PLL chip with
