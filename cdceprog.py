@@ -26,6 +26,8 @@
 #  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
 #  THE POSSIBILITY OF SUCH DAMAGE.
 
+# -24/06-2026 - Actualizado de python2 a python3 mediante "2to3"
+
 import base64
 import smbus
 import sys
@@ -45,7 +47,7 @@ all_plls = [cdce913, cdce925]
 
 # read data file
 if len(sys.argv) != 2:
-    print("Usage: {} hexfile".format(sys.argv[0]))
+    print(("Usage: {} hexfile".format(sys.argv[0])))
     exit(2)
 
 pllregs = {}
@@ -53,7 +55,7 @@ pllregs = {}
 fd = open(sys.argv[1], "r")
 for line in fd:
     if not line.startswith(":"):
-        print("No start character found in {}".format(line))
+        print(("No start character found in {}".format(line)))
         exit(2)
 
     data = bytearray.fromhex(line.rstrip().lstrip(":"))
@@ -62,13 +64,13 @@ for line in fd:
     # FIXME: Verify checksum
     if data[3] == 0:
         # copy data
-        for i in xrange(0, bytecount):
+        for i in range(0, bytecount):
             pllregs[addr + i] = data[i + 4]
     elif data[3] == 1:
         # end marker, do nothing
         pass
     else:
-        print("ERROR: Unknown record type {:d} found".format(data[3]))
+        print(("ERROR: Unknown record type {:d} found".format(data[3])))
 
 fd.close()
 
@@ -81,10 +83,10 @@ for pll in all_plls:
         current_pll = pll
 
 if current_pll == None:
-    print("ERROR: No PLL type with {} registers known".format(pll_regcount))
+    print(("ERROR: No PLL type with {} registers known".format(pll_regcount)))
     exit(2)
 
-print("Found data for a {} chip".format(current_pll.name))
+print(("Found data for a {} chip".format(current_pll.name)))
 
 # clear EEPROM lock and write bits
 pllregs[1] = pllregs[1] & ~(1 << 5)
@@ -102,17 +104,17 @@ bus = smbus.SMBus(1)
 try:
     res = bus.read_byte_data(current_pll.address, 0x80)
 except IOError as e:
-    print("I/O error({0}): {1}".format(e.errno, e.strerror))
+    print(("I/O error({0}): {1}".format(e.errno, e.strerror)))
     print("(maybe the PLL is not connected?)")
     exit(2)
 
 # write PLL settings
-for i in xrange(0x10, current_pll.register_count):
+for i in range(0x10, current_pll.register_count):
     if pllregs[i] != None:
         bus.write_byte_data(current_pll.address, 0x80 + i, pllregs[i])
 
 # write control register settings
-for i in xrange(0, 0x10):
+for i in range(0, 0x10):
     if pllregs[i] != None:
         bus.write_byte_data(current_pll.address, 0x80 + i, pllregs[i])
 
