@@ -1,9 +1,34 @@
-# cdceprog actualizado
+# CDCEprog (Actualizado y en Español)
 
-Este fork esta orientado para actualizar el codigo original de [ikorb y su cdceprog](https://github.com/ikorb/cdceprog).
-Tambien se añadira un tutorial de uso en español.
+Este fork está orientado a actualizar el código original de [ikorb y su cdceprog](https://github.com/ikorb/cdceprog) para sistemas modernos. También se añade un tutorial de uso documentado 100% en español.
 
-# Repo Original
+## 📖 Prefacio
+A la hora de crear mods, muchas veces se necesita programar chips PLL **CDCE913 / CDCE925**. El problema es que el programador oficial de Texas Instruments es bastante caro, y programadores universales clásicos como el **T48** no sirven (ya que el chip se programa exclusivamente mediante el bus **I2C**). 
+
+Considerando que el uso principal de esto en la comunidad retro es programar placas **DFO (Dual Frequency Oscillator)** o **MFO**, se necesitaba una forma accesible, rápida y económica de realizar la carga del código (`.hex`) al chip utilizando alguna SBC con Linux, como una Raspberry Pi.
+
+> [!NOTE]
+> En teoría, cualquier SBC con puerto `I2C`, GPIO de 3.3V y que soporte `python3-smbus` por `apt` debería servir, se usa la Raspberry Pi Zero 2W como ejemplo.
+
+---
+# 🛠️ Parte técnica
+
+Los chips CDCE913/CDCE925 se programan mediante el protocolo **I2C**. El proceso consiste en cargar un archivo `.hex` a la memoria RAM del integrado y, posteriormente, el script le indica al chip que traspase esa información desde la RAM hacia la **EEPROM**, donde quedará guardada de forma persistente.
+
+> [!NOTE]
+> Algunos diseños de DFO/PCB incluyen un chip de memoria externo al lado del CDCE que, en cada inicio de la consola, le envía la configuración a la RAM sin utilizar la EEPROM interna del CDCE. Esta guía no abordará ese método.
+
+El código de ikorb se encarga de mandar el archivo y la orden de traspaso a la EEPROM automáticamente. También detecta si el código fue diseñado para el modelo CDCE913 o CDCE925, y verifica si hay un chip respondiendo físicamente en el puerto I2C.
+
+Esta aproximación es ideal para usar en placas **Raspberry Pi** convencionales (no la Pi Pico), ya que cuentan con puertos I2C nativos utilizables por el script.
+
+> [!WARNING]
+> Si tienes una de las primeras revisiones de Raspberry Pi que utiliza el **I2C bus 0** en vez del **bus 1**, tendrás que cambiar manualmente la línea `bus = smbus.SMBus(1)` por `bus = smbus.SMBus(0)` dentro del archivo `cdceprog.py`.
+
+---
+
+# \\\Repo Original///" 
+
 # cdceprog #
 
 This is a very quick hack for programming a TI CDCE913/925 PLL chip with
