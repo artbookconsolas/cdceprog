@@ -16,7 +16,7 @@ Considerando que el uso principal de esto en la comunidad retro es programar pla
 Los chips CDCE913/CDCE925 se programan mediante el protocolo **I2C**. El proceso consiste en cargar un archivo `.hex` a la memoria RAM del integrado y, posteriormente, el script le indica al chip que traspase esa información desde la RAM hacia la **EEPROM**, donde quedará guardada de forma persistente.
 
 > [!NOTE]
-> Algunos diseños de DFO/PCB incluyen un chip de memoria externo al lado del CDCE que, en cada inicio de la consola, le envía la configuración a la RAM sin utilizar la EEPROM interna del CDCE. Esta guía no abordará ese método.
+> Algunos diseños de DFO/PCB incluyen un chip de memoria externo al lado del CDCE que, en cada inicio del sistema, le envía la configuración a la RAM sin utilizar la EEPROM interna del CDCE. Esta guía no abordará ese método.
 
 El código de ikorb se encarga de mandar el archivo y la orden de traspaso a la EEPROM automáticamente. También detecta si el código fue diseñado para el modelo CDCE913 o CDCE925, y verifica si hay un chip respondiendo físicamente en el puerto I2C.
 
@@ -24,6 +24,45 @@ Esta aproximación es ideal para usar en placas **Raspberry Pi** convencionales 
 
 > [!WARNING]
 > Si tienes una de las primeras revisiones de Raspberry Pi que utiliza el **I2C bus 0** en vez del **bus 1**, tendrás que cambiar manualmente la línea `bus = smbus.SMBus(1)` por `bus = smbus.SMBus(0)` dentro del archivo `cdceprog.py`.
+
+# 🚀 Modo de Uso
+
+## 1. Conexión del Hardware (Pinout)
+Antes de ejecutar el script, debes conectar los pines de tu placa DFO/MFO a los pines GPIO de tu Raspberry Pi (u otra SBC compatible). 
+
+> [!CAUTION]
+> Los chips CDCE913/CDCE925 funcionan estrictamente con **lógica de 3.3V**. Dependiendo de para qué voltaje esté diseñada la PCB y los reguladores que tenga montados para la alimentación del CDCE913/CDCE925, conecta el pin de VCC donde corresponda.
+
+> [!WARNING]
+> NO conectes al mismo tiempo la alimentación desde la consola y desde la SBC, de lo contrario le dirás adiós a alguna de las tres cosas: la consola, la PCB con el chip CDCE o la misma SBC.
+
+| Pin en Placa DFO / Chip | Pin Físico en Raspberry Pi | Función |
+| :--- | :---: | :--- |
+| **VCC** | Pin 1 (3.3V) / Pin 2 (5V) | Alimentación de la PCB |
+| **GND** | Pin 6 | Tierra común |
+| **SDA** | Pin 3 | Datos I2C |
+| **SCL** | Pin 5 | Reloj I2C |
+
+> [!NOTE]
+> Para otras SBC, investiga el pinout correspondiente en su documentación oficial.
+
+## 2. Descarga el script
+Baja el script `cdceprog.py` desde los archivos de este repositorio, y pásalo hacia tu SBC mediante USB, SFTP, SSH, o como se te ocurra. (También puedes simplemente clonar el repositorio directamente en la placa usando `git clone`).
+
+## 3. En la SBC a usar
+Abre la terminal en tu placa, navega hasta la carpeta donde guardaste el script y ejecútalo usando `python3`, pasándole como argumento el archivo `.hex` que quieres grabar en el chip.
+
+También debes tener instalada la librería `python3-smbus` para que el script pueda comunicarse con los pines físicos. Se instala con:
+```bash
+sudo apt update
+sudo apt install python3-smbus -y
+```
+Una vez instalado, el comando para utilizar el script es:
+```bash
+sudo python3 cdceprog.py archivo.hex
+```
+
+---
 
 ---
 
