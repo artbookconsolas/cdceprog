@@ -26,11 +26,10 @@
 #  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
 #  THE POSSIBILITY OF SUCH DAMAGE.
 
-"""
-Codigo actualizado por "Kiltro500" / "C.G" mediante "artbookconsolas".
-Cambios:
-- 24/06/2026 - Actualizado de python2 a python3 mediante "2to3".
-"""
+# Codigo actualizado por "Kiltro500" / "C.G" mediante "artbookconsolas".
+# Cambios:
+# 24/06/2026 - Actualizado de python2 a python3 mediante "2to3".
+
 import base64
 import smbus
 import sys
