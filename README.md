@@ -50,14 +50,14 @@ Antes de ejecutar el script, debes conectar los pines de tu placa DFO/MFO a los 
 Baja el script `cdceprog.py` desde los archivos de este repositorio, y pásalo hacia tu SBC mediante USB, SFTP, SSH, o como se te ocurra. (También puedes simplemente clonar el repositorio directamente en la placa usando `git clone`).
 
 ## 3. En la SBC a usar
-Abre la terminal en tu placa, navega hasta la carpeta donde guardaste el script y ejecútalo usando `python3`, pasándole como argumento el archivo `.hex` que quieres grabar en el chip.
-
-También debes tener instalada la librería `python3-smbus` para que el script pueda comunicarse con los pines físicos. Se instala con:
+Primero debes tener instalada la librería `python3-smbus` para que el script pueda comunicarse con los pines físicos. Se instala desde la terminal con:
 ```bash
 sudo apt update
 sudo apt install python3-smbus -y
 ```
-Una vez instalado, el comando para utilizar el script es:
+
+Una vez instalado esto, debes abrir la terminal en la carpeta que contenga el script y el archivo .hex a usar. Si estás en un entorno sin interfaz gráfica, debes ir a la ubicación de estos archivos mediante comandos (ej: cd /ruta/a/tu/carpeta).
+El comando para utilizar el script es:
 ```bash
 sudo python3 cdceprog.py archivo.hex
 ```
